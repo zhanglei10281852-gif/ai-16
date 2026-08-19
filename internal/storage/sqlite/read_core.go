@@ -239,13 +239,13 @@ func (q *queries) ListInferenceRunInputs(ctx context.Context, runID string) ([]d
 	return items, nil
 }
 
-func decodeMetadata(raw string) (map[string]string, bool) {
+func decodeMetadata(raw string) (map[string]string, error) {
 	metadata := make(map[string]string)
 	if raw == "" || raw == "{}" {
-		return metadata, true
+		return metadata, nil
 	}
 	if err := json.Unmarshal([]byte(raw), &metadata); err != nil {
-		return make(map[string]string), false
+		return nil, fmt.Errorf("decode audit metadata: %w", err)
 	}
-	return metadata, true
+	return metadata, nil
 }

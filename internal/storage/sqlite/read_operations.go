@@ -320,7 +320,10 @@ func (q *queries) ListAuditEvents(ctx context.Context, filter repository.AuditFi
 			&event.EntityID, &event.Outcome, &metadataJSON, &createdAt); err != nil {
 			return repository.AuditPage{}, fmt.Errorf("scan audit event: %w", err)
 		}
-		metadata, _ := decodeMetadata(metadataJSON)
+		metadata, err := decodeMetadata(metadataJSON)
+		if err != nil {
+			return repository.AuditPage{}, err
+		}
 		event.Metadata = metadata
 		if event.CreatedAt, err = parseTime(createdAt); err != nil {
 			return repository.AuditPage{}, err
